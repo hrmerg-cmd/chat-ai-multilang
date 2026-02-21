@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Topup Production</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>🎮 ML Topup Laos</h1>
+</header>
+
+<main>
+  <section id="topup-form">
+    <h2>เติมเงิน Mobile Legends</h2>
+
+    <label>User ID</label>
+    <input type="text" id="userId" placeholder="ใส่ User ID ของคุณ">
+
+    <label>เลือกแพ็กเกจ</label>
+    <select id="package">
+      <option value="16_diamonds">16 Diamonds - 7,000₭</option>
+      <option value="67_diamonds">67 Diamonds - 28,000₭</option>
+      <option value="1429_diamonds">1429 Diamonds - 560,000₭</option>
+    </select>
+
+    <label>วิธีชำระเงิน</label>
+    <select id="payment">
+      <option value="lao_telecom">Lao Telecom</option>
+      <option value="unitel">Unitel</option>
+      <option value="card">Card Payment</option>
+    </select>
+
+    <div class="checkbox">
+      <input type="checkbox" id="notAI">
+      <label for="notAI">ฉันไม่ใช่บอท</label>
+    </div>
+
+    <button id="buyBtn">ซื้อแพ็กเกจ</button>
+    <div id="orderStatus"></div>
+  </section>
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>
