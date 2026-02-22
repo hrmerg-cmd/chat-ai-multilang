@@ -1,47 +1,108 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ML Topup Production</title>
-<link rel="stylesheet" href="public/style.css">
+<title>Support Center | Souksakhon Marketing</title>
+<style>
+body{font-family:sans-serif;margin:0;padding:0;background:#111;color:white;}
+.header{text-align:center;padding:50px;}
+.chat-btn{position:fixed;bottom:25px;right:25px;background:#00f5ff;width:60px;height:60px;border-radius:50%;border:none;font-size:24px;cursor:pointer;}
+.chat-box{position:fixed;bottom:100px;right:25px;width:350px;height:500px;background:#1e2a38;border-radius:20px;display:none;flex-direction:column;overflow:hidden;}
+.chat-header{background:#00f5ff;color:black;padding:15px;font-weight:600;}
+.chat-messages{flex:1;padding:15px;overflow-y:auto;font-size:14px;}
+.chat-input{display:flex;border-top:1px solid #333;}
+.chat-input input{flex:1;padding:10px;border:none;outline:none;}
+.chat-input button{background:#00f5ff;border:none;padding:10px 15px;cursor:pointer;}
+.lang-switch{position:fixed;top:20px;right:20px;}
+.lang-switch button{margin-left:5px;padding:5px 10px;cursor:pointer;}
+.lang-switch button.active{background:#00ff99;color:black;border-radius:5px;}
+.chat-message.user{color:#00f5ff;margin-bottom:5px;}
+.chat-message.ai{color:#00ff99;margin-bottom:5px;}
+#typingIndicator{display:none;color:#aaa;padding:5px 10px;}
+</style>
 </head>
 <body>
-<header>
-  <h1>🎮 ML Topup Laos</h1>
-</header>
+<div class="lang-switch">
+  <button data-lang="th" class="active">TH</button>
+  <button data-lang="la">LA</button>
+  <button data-lang="en">EN</button>
+</div>
 
-<main>
-  <section id="topup-form">
-    <h2>เติมเงิน Mobile Legends</h2>
+<div class="header">
+  <h1 id="headerTitle">Support Center</h1>
+  <p id="headerDesc">24/7 Enterprise Support & AI Assistance</p>
+</div>
 
-    <label>User ID</label>
-    <input type="text" id="userId" placeholder="ใส่ User ID ของคุณ">
+<button class="chat-btn" onclick="toggleChat()">💬</button>
 
-    <label>เลือกแพ็กเกจ</label>
-    <select id="package">
-      <option value="16_diamonds">16 Diamonds - 7,000₭</option>
-      <option value="67_diamonds">67 Diamonds - 28,000₭</option>
-      <option value="1429_diamonds">1429 Diamonds - 560,000₭</option>
-    </select>
+<div class="chat-box" id="chatBox">
+  <div class="chat-header" id="chatHeader">AI Support Assistant</div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div id="typingIndicator">AI is typing...</div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
 
-    <label>วิธีชำระเงิน</label>
-    <select id="payment">
-      <option value="lao_telecom">Lao Telecom</option>
-      <option value="unitel">Unitel</option>
-      <option value="card">Card Payment</option>
-    </select>
+<script>
+// Multi-language dictionary
+const translations = {
+    en:{ headerTitle:"Support Center", headerDesc:"24/7 Enterprise Support & AI Assistance", chatHeader:"AI Support Assistant", chatPlaceholder:"Type your message..." },
+    th:{ headerTitle:"ศูนย์ช่วยเหลือ", headerDesc:"บริการ 24/7 พร้อมผู้ช่วย AI", chatHeader:"ผู้ช่วย AI", chatPlaceholder:"พิมพ์ข้อความของคุณ..." },
+    la:{ headerTitle:"ສູນຊ່ວຍເຫຼືອ", headerDesc:"ບໍລິການ 24/7 ກັບ AI", chatHeader:"ຜູ້ຊ່ວຍ AI", chatPlaceholder:"ພິມຂໍ້ຄວາມຂອงທ່ານ..." }
+};
 
-    <div class="checkbox">
-      <input type="checkbox" id="notAI">
-      <label for="notAI">ฉันไม่ใช่บอท</label>
-    </div>
+// Language switch
+const langButtons=document.querySelectorAll('.lang-switch button');
+langButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    langButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    switchLanguage(btn.dataset.lang);
+  });
+});
+function switchLanguage(lang){
+  const t=translations[lang];
+  document.getElementById("headerTitle").innerText=t.headerTitle;
+  document.getElementById("headerDesc").innerText=t.headerDesc;
+  document.getElementById("chatHeader").innerText=t.chatHeader;
+  document.getElementById("userInput").placeholder=t.chatPlaceholder;
+}
 
-    <button id="buyBtn">ซื้อแพ็กเกจ</button>
-    <div id="orderStatus"></div>
-  </section>
-</main>
+// Chat
+function toggleChat(){ const box=document.getElementById("chatBox"); box.style.display=box.style.display==="flex"?"none":"flex"; }
 
-<script src="public/script.js"></script>
+async function sendMessage(){
+  const input=document.getElementById("userInput");
+  const msg=input.value.trim();
+  if(!msg) return;
+  appendMessage("You",msg,"user");
+  input.value="";
+  const typing=document.getElementById("typingIndicator");
+  typing.style.display="block";
+
+  try{
+    const lang=document.querySelector('.lang-switch button.active').dataset.lang;
+    const res=await fetch("/api/chat",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({message:msg,language:lang}) });
+    const data=await res.json();
+    typing.style.display="none";
+    appendMessage("AI",data.reply,"ai");
+  }catch(err){
+    typing.style.display="none";
+    appendMessage("AI","Sorry, there was an error connecting to AI.","ai");
+  }
+}
+
+function appendMessage(sender,text,className){
+  const container=document.getElementById("chatMessages");
+  const div=document.createElement("div");
+  div.className="chat-message "+className;
+  div.innerHTML="<strong>"+sender+":</strong> "+text;
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+}
+</script>
 </body>
 </html>
