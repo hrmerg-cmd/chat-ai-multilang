@@ -1,108 +1,644 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lo">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Support Center | Souksakhon Marketing</title>
+<title>Gaming Top-Up 2026</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-body{font-family:sans-serif;margin:0;padding:0;background:#111;color:white;}
-.header{text-align:center;padding:50px;}
-.chat-btn{position:fixed;bottom:25px;right:25px;background:#00f5ff;width:60px;height:60px;border-radius:50%;border:none;font-size:24px;cursor:pointer;}
-.chat-box{position:fixed;bottom:100px;right:25px;width:350px;height:500px;background:#1e2a38;border-radius:20px;display:none;flex-direction:column;overflow:hidden;}
-.chat-header{background:#00f5ff;color:black;padding:15px;font-weight:600;}
-.chat-messages{flex:1;padding:15px;overflow-y:auto;font-size:14px;}
-.chat-input{display:flex;border-top:1px solid #333;}
-.chat-input input{flex:1;padding:10px;border:none;outline:none;}
-.chat-input button{background:#00f5ff;border:none;padding:10px 15px;cursor:pointer;}
-.lang-switch{position:fixed;top:20px;right:20px;}
-.lang-switch button{margin-left:5px;padding:5px 10px;cursor:pointer;}
-.lang-switch button.active{background:#00ff99;color:black;border-radius:5px;}
-.chat-message.user{color:#00f5ff;margin-bottom:5px;}
-.chat-message.ai{color:#00ff99;margin-bottom:5px;}
-#typingIndicator{display:none;color:#aaa;padding:5px 10px;}
-</style>
-</head>
-<body>
-<div class="lang-switch">
-  <button data-lang="th" class="active">TH</button>
-  <button data-lang="la">LA</button>
-  <button data-lang="en">EN</button>
-</div>
-
-<div class="header">
-  <h1 id="headerTitle">Support Center</h1>
-  <p id="headerDesc">24/7 Enterprise Support & AI Assistance</p>
-</div>
-
-<button class="chat-btn" onclick="toggleChat()">💬</button>
-
-<div class="chat-box" id="chatBox">
-  <div class="chat-header" id="chatHeader">AI Support Assistant</div>
-  <div class="chat-messages" id="chatMessages"></div>
-  <div id="typingIndicator">AI is typing...</div>
-  <div class="chat-input">
-    <input type="text" id="userInput" placeholder="Type your message...">
-    <button onclick="sendMessage()">Send</button>
-  </div>
-</div>
-
-<script>
-// Multi-language dictionary
-const translations = {
-    en:{ headerTitle:"Support Center", headerDesc:"24/7 Enterprise Support & AI Assistance", chatHeader:"AI Support Assistant", chatPlaceholder:"Type your message..." },
-    th:{ headerTitle:"ศูนย์ช่วยเหลือ", headerDesc:"บริการ 24/7 พร้อมผู้ช่วย AI", chatHeader:"ผู้ช่วย AI", chatPlaceholder:"พิมพ์ข้อความของคุณ..." },
-    la:{ headerTitle:"ສູນຊ່ວຍເຫຼືອ", headerDesc:"ບໍລິການ 24/7 ກັບ AI", chatHeader:"ຜູ້ຊ່ວຍ AI", chatPlaceholder:"ພິມຂໍ້ຄວາມຂອงທ່ານ..." }
-};
-
-// Language switch
-const langButtons=document.querySelectorAll('.lang-switch button');
-langButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    langButtons.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    switchLanguage(btn.dataset.lang);
-  });
-});
-function switchLanguage(lang){
-  const t=translations[lang];
-  document.getElementById("headerTitle").innerText=t.headerTitle;
-  document.getElementById("headerDesc").innerText=t.headerDesc;
-  document.getElementById("chatHeader").innerText=t.chatHeader;
-  document.getElementById("userInput").placeholder=t.chatPlaceholder;
+body { font-family: Arial,sans-serif; background:#f4f6f9; margin:0; }
+/* ===== Header ===== */
+header {
+  background: #ffffff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
 
-// Chat
-function toggleChat(){ const box=document.getElementById("chatBox"); box.style.display=box.style.display==="flex"?"none":"flex"; }
+#headerContainer {
+  max-width: 1400px;
+  margin: auto;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-async function sendMessage(){
-  const input=document.getElementById("userInput");
-  const msg=input.value.trim();
-  if(!msg) return;
-  appendMessage("You",msg,"user");
-  input.value="";
-  const typing=document.getElementById("typingIndicator");
-  typing.style.display="block";
+/* ===== Logo ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  try{
-    const lang=document.querySelector('.lang-switch button.active').dataset.lang;
-    const res=await fetch("/api/chat",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({message:msg,language:lang}) });
-    const data=await res.json();
-    typing.style.display="none";
-    appendMessage("AI",data.reply,"ai");
-  }catch(err){
-    typing.style.display="none";
-    appendMessage("AI","Sorry, there was an error connecting to AI.","ai");
+.logo img {
+  height: 40px;
+}
+
+.logo span {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* ===== Navigation ===== */
+nav {
+  display: flex;
+  gap: 25px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* Hover effect เส้นขีด animation */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background: #7f00ff;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #7f00ff;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* ===== Mobile Menu Button ===== */
+.menu-toggle {
+  display: block;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.header-inner {
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 40px;
+  gap:20px;
+}
+
+.logo { display:flex; align-items:center; gap:10px; }
+.logo img { height:40px; }
+.logo span { font-size:20px; font-weight:600; color:#111; }
+
+/* Nav */
+nav { display:flex; gap:25px; align-items:center; }
+nav a { text-decoration:none; color:#333; font-weight:500; position:relative; transition:0.3s; }
+nav a::after { content:""; position:absolute; left:0; bottom:-5px; width:0; height:2px; background:#7f00ff; transition:0.3s; }
+nav a:hover { color:#7f00ff; }
+nav a:hover::after { width:100%; }
+
+/* Dropdown */
+.dropdown { position:relative; }
+.dropdown-content {
+  display:none;
+  position:absolute;
+  top:35px;
+  left:0;
+  background:#fff;
+  flex-direction:column;
+  box-shadow:0 5px 15px rgba(0,0,0,.1);
+  z-index:1000;
+}
+.dropdown:hover .dropdown-content { display:flex; }
+.dropdown-content a { padding:10px 15px; white-space:nowrap; color:#333; }
+.dropdown-content a:hover { background:#f4f4f4; }
+
+/* Hamburger */
+.hamburger {
+  display:none;
+  font-size:28px;
+  cursor:pointer;
+  margin-left:20px;
+}
+
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 220px;
+    background: #fff;
+    flex-direction: column;
+    padding: 60px 20px;
+    gap: 20px;
+    box-shadow: 3px 0 15px rgba(0,0,0,0.2);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1200;
+  }
+
+  nav.active {
+    transform: translateX(0);
+  }
+
+  #overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 998;
+  }
+
+  #overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .hamburger { display:block; cursor:pointer; }
+}
+h1 { margin:0; font-size:1.8rem; }
+h2 { margin-top:40px; margin-bottom:20px; text-align:center; color:#7f00ff; }
+
+.card-grid { display:grid; gap:20px; padding:20px; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }
+.card img { width:100%; height:140px; object-fit:cover; border-radius:12px; }
+.hover-card { transition:.3s ease; border-radius:12px; cursor:pointer; }
+.hover-card:hover { transform:translateY(-6px); box-shadow:0 12px 25px rgba(0,0,0,.2); }
+.card-body small.open { color:green; }
+.card-body small.close { color:red; }
+
+#devModal .modal-content { text-align:center; padding:20px; }
+/* ===== Footer ===== */
+footer {
+  background: #0f0f0f;
+  color: #ccc;
+  padding: 50px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.footer-logo {
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.footer-box h4 {
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.footer-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-box ul li {
+  margin-bottom: 8px;
+}
+
+.footer-box a {
+  text-decoration: none;
+  color: #aaa;
+  transition: 0.3s;
+}
+
+.footer-box a:hover {
+  color: #7f00ff;
+}
+
+.social a {
+  display: inline-block;
+  margin-right: 10px;
+  color: #7f00ff;
+  transition: 0.3s;
+}
+
+.social a:hover {
+  color: #fff;
+}
+
+.footer-box a,
+.social a {
+  text-decoration: none; /* ลบเส้นใต้ */
+  color: #aaa;
+  transition: 0.3s;
+}
+
+.footer-box a:hover,
+.social a:hover {
+  color: #7f00ff; /* สีเปลี่ยนเมื่อ hover */
+  text-decoration: none; /* ย้ำไม่ให้มีเส้นใต้ */
+}
+
+form#subscribe-form {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+form#subscribe-form input[type="email"] {
+  flex: 1 1 auto;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+}
+
+form#subscribe-form button {
+  padding: 8px 16px;
+  border: none;
+  background: #7f00ff;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+form#subscribe-form button:hover {
+  background: #5e00cc;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  border-top: 1px solid #222;
+  padding-top: 20px;
+  font-size: 14px;
+  color: #888;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) { /* มือถือ */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  form#subscribe-form {
+    flex-direction: column;
   }
 }
 
-function appendMessage(sender,text,className){
-  const container=document.getElementById("chatMessages");
-  const div=document.createElement("div");
-  div.className="chat-message "+className;
-  div.innerHTML="<strong>"+sender+":</strong> "+text;
-  container.appendChild(div);
-  container.scrollTop=container.scrollHeight;
+@media (min-width: 481px) and (max-width: 768px) { /* แท็บเล็ต */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
+@media (min-width: 769px) and (max-width: 1200px) { /* PC กลาง */
+  .footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1201px) { /* PC ใหญ่ */
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (max-width:480px){ .card-grid { grid-template-columns:repeat(2,1fr);} .card img{height:120px;} }
+@media (min-width:481px) and (max-width:768px){ .card-grid { grid-template-columns:repeat(3,1fr);} .card img{height:140px;} }
+@media (min-width:769px) and (max-width:1200px){ .card-grid { grid-template-columns:repeat(4,1fr);} .card img{height:160px;} }
+@media (min-width:1201px){ .card-grid { grid-template-columns:repeat(5,1fr);} .card img{height:180px;} }
+
+#aboutSection { padding:40px 20px; background:#fff; }
+.about-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:30px; max-width:1200px; margin:auto; }
+.about-card { background:#f9f9f9; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,.1); transition:.3s ease; }
+.about-card:hover { transform:translateY(-5px); }
+.about-card img { width:100%; height:220px; object-fit:cover; }
+.about-content { padding:20px; text-align:center; }
+.about-content h3 { margin-bottom:10px; }
+.about-content p { font-size:14px; color:#555; margin-bottom:15px; }
+.about-btn { display:inline-block; padding:8px 16px; background:#7f00ff; color:#fff; border-radius:8px; text-decoration:none; }
+</style>
+</head>
+<body>
+<!-- Overlay -->
+<div id="overlay" onclick="toggleMenu()"></div>
+<header>
+  <div class="nav-container" id="headerContainer"></div>
+</header>
+
+<div class="container py-4">
+  <h2>ເກມຍອດນິຍົມ</h2>
+  <div id="gamesGrid" class="card-grid"></div>
+
+  <h2>ບັດກຳນັນ</h2>
+  <div id="vouchersGrid" class="card-grid"></div>
+</div>
+
+<section id="aboutSection">
+  <h2>About Us</h2>
+  <div class="about-container" id="aboutContainer"></div>
+</section>
+
+<div class="modal fade" id="devModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <h5>ຂໍອະໄພ</h5>
+      <p>ລະບົບກຳລັງຢູ່ລະດັບການພັດທະນາ</p>
+      <button class="btn btn-primary mt-2" data-bs-dismiss="modal">ປິດ</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="row" id="footer-content"></div>
+    <hr class="border-light">
+    <div class="text-center pb-3" id="footer-bottom"></div>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyB1MTh9KC8g9xwdEQ-XNbfGlC7qaOgLr6w",
+  authDomain: "idsa-4d2bc.firebaseapp.com",
+  projectId: "idsa-4d2bc",
+  appId: "1:374597166583:web:38bfc47310c0f47f687af2"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+function showDevPopup(){ const modal = new bootstrap.Modal(document.getElementById("devModal")); modal.show(); }
+
+// Email validation
+function isValidEmail(email){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+// Load games
+async function loadGames(){
+  const container = document.getElementById("gamesGrid"); container.innerHTML="";
+  const snapshot = await db.collection("games").get();
+  snapshot.forEach(doc=>{
+    const g=doc.data();
+    const div=document.createElement("div");
+    div.innerHTML=`<div class="card hover-card">
+      <img src="${g.image}" class="card-img-top" alt="${g.name}">
+      <div class="card-body text-center">
+        <h6>${g.name}</h6>
+        <small class="${g.subtitle?'open':'close'}">${g.subtitle?'ເປິດໃຫ້ບໍລິການ':'ປິດປັບປຸງ'}</small>
+      </div></div>`;
+    container.appendChild(div);
+    div.firstElementChild.addEventListener("click",()=>{ if(!g.subtitle || g.status==='developing'){showDevPopup();}else{window.location.href=g.link||"#";} });
+  });
+}
+
+// Load vouchers
+async function loadVouchers(){
+  const container=document.getElementById("vouchersGrid"); container.innerHTML="";
+  const snapshot=await db.collection("vouchers").get();
+  snapshot.forEach(doc=>{
+    const v=doc.data();
+    const div=document.createElement("div");
+    div.innerHTML=`<div class="card hover-card">
+      <img src="${v.image}" class="card-img-top" alt="${v.name}">
+      <div class="card-body text-center">
+        <h6>${v.name}</h6>
+        <small class="${v.subtitle?'open':'close'}">${v.subtitle?'ເປິດໃຫ້ບໍລິການ':'ປິດປັບປຸງ'}</small>
+      </div></div>`;
+    container.appendChild(div);
+    div.firstElementChild.addEventListener("click",()=>{ if(!v.subtitle || v.status==='developing'){showDevPopup();}else{window.location.href=v.link||"#";} });
+  });
+}
+
+// Load About
+function loadAbout(){
+  const container=document.getElementById("aboutContainer"); container.innerHTML="";
+  db.collection("abouts").get().then(snapshot=>{
+    snapshot.forEach(doc=>{
+      const a=doc.data(); const div=document.createElement("div");
+      div.className="about-card";
+      div.innerHTML=`<img src="${a.image}" alt="${a.name}">
+      <div class="about-content">
+        <h3>${a.name}</h3><p>${a.p}</p>
+        <a href="${a.link||'#'}" class="about-btn">${a.but||'Learn More'}</a>
+      </div>`;
+      container.appendChild(div);
+    });
+  });
+}
+
+// Load Header
+function loadHeader() {
+  const container = document.getElementById("headerContainer");
+
+  db.collection("header").doc("main").get()
+  .then(doc => {
+    if (!doc.exists) return;
+
+    const h = doc.data();
+    let menus = (h.menus || [])
+      .filter(m => m.active !== false)
+      .sort((a, b) => a.order - b.order);
+
+    let menuHTML = "";
+    menus.forEach(menu => {
+      menuHTML += `<a href="${menu.url || '#'}">${menu.name}</a>`;
+    });
+
+    container.innerHTML = `
+     <div class="header-inner">
+        <div class="logo">
+          <img src="${h.logo || ''}" alt="logo">
+          <span>${h.title || ''}</span>
+        </div>
+
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+        <nav id="mainMenu">
+          ${menuHTML}
+        </nav>
+      </div>
+    `;
+
+    // Bind events หลังสร้างเมนู
+    setupMobileMenu();
+  });
+}
+
+function setupMobileMenu() {
+  const menu = document.getElementById("mainMenu");
+  const overlay = document.getElementById("overlay");
+  const hamburger = document.querySelector(".hamburger");
+
+  if(!menu || !overlay || !hamburger) return;
+
+  function toggleMenu(open) {
+    if(open === undefined) menu.classList.toggle("active");
+    else menu.classList.toggle("active", open);
+
+    overlay.classList.toggle("active", menu.classList.contains("active"));
+    menu.style.transform = menu.classList.contains("active") ? "translateX(0)" : "translateX(-100%)";
+  }
+
+  // click hamburger / overlay
+  hamburger.addEventListener("click", ()=>toggleMenu());
+  overlay.addEventListener("click", ()=>toggleMenu(false));
+
+  // ===== swipe gestures =====
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+  document.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+  });
+
+  document.addEventListener("touchmove", e => {
+    if(!isDragging) return;
+    currentX = e.touches[0].clientX;
+    let deltaX = currentX - startX;
+
+    if(!menu.classList.contains("active") && deltaX > 0 && startX < 50){ 
+      // swipe จากซ้าย → เปิด menu
+      menu.style.transform = `translateX(${Math.min(-220 + deltaX, 0)}px)`;
+    } 
+    else if(menu.classList.contains("active") && deltaX < 0){
+      // swipe ขณะเปิด → ปิด menu
+      menu.style.transform = `translateX(${Math.max(deltaX, -220)}px)`;
+    }
+  });
+
+  document.addEventListener("touchend", e => {
+    isDragging = false;
+    let deltaX = currentX - startX;
+
+    if(!menu.classList.contains("active") && deltaX > 50 && startX < 50){
+      // swipe ขวา >50px จากซ้าย → เปิดเมนู
+      toggleMenu(true);
+    } 
+    else if(menu.classList.contains("active") && deltaX < -50){
+      // swipe ซ้าย >50px → ปิดเมนู
+      toggleMenu(false);
+    } 
+    else {
+      // reset
+      menu.style.transform = menu.classList.contains("active") ? "translateX(0)" : "translateX(-100%)";
+    }
+  });
+}
+// เรียกหลังสร้าง header dynamic
+function loadHeader() {
+  const container = document.getElementById("headerContainer");
+
+  db.collection("header").doc("main").get()
+  .then(doc => {
+    if (!doc.exists) return;
+    const h = doc.data();
+
+    let menus = (h.menus || [])
+      .filter(m => m.active !== false)
+      .sort((a, b) => a.order - b.order);
+
+    let menuHTML = "";
+    menus.forEach(menu => {
+      if (menu.submenu && menu.submenu.length > 0) {
+        let subHTML = "";
+        menu.submenu.forEach(sub => { subHTML += `<a href="${sub.url}">${sub.name}</a>`; });
+        menuHTML += `<div class="dropdown">
+          <a href="${menu.url || '#'}">${menu.name}</a>
+          <div class="dropdown-content">${subHTML}</div>
+        </div>`;
+      } else {
+        menuHTML += `<a href="${menu.url || '#'}">${menu.name}</a>`;
+      }
+    });
+
+    container.innerHTML = `
+      <div class="header-inner">
+        <div class="logo">
+          <img src="${h.logo || ''}" alt="logo">
+          <span>${h.title || ''}</span>
+        </div>
+
+        <div class="hamburger">☰</div>
+
+        <nav id="mainMenu">
+          ${menuHTML}
+        </nav>
+      </div>
+    `;
+
+    // Bind mobile menu events หลัง DOM พร้อม
+    setupMobileMenu();
+  });
+}
+//toggleMenu
+
+
+// Load Footer
+function loadFooter(){
+  db.collection("footer").doc("main").get().then(doc=>{
+    if(!doc.exists){console.log("ไม่พบ footer");return;}
+    const f=doc.data();
+    document.getElementById("footer-content").innerHTML=`<div class="col-lg-4 col-md-6 mb-4">
+      <img src="${f.logo||''}" width="120" class="mb-3"><p>${f.description||''}</p>
+      <form id="subscribe-form" class="mt-3">
+        <input type="email" id="subscribe-email" class="form-control mb-2" placeholder="กรอกอีเมล์ของคุณ">
+        <button class="btn btn-danger w-100">สมัครรับโปรโมชั่น</button>
+      </form>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4"><h6>เมนู</h6>${(f.links||[]).map(l=>`<div><a href="${l.url}" class="text-white text-decoration-none">${l.name}</a></div>`).join("")}</div>
+    <div class="col-lg-3 col-md-6 mb-4"><h6>นโยบาย</h6>${(f.policy||[]).map(p=>`<div><a href="${p.url}" class="text-white text-decoration-none">${p.name}</a></div>`).join("")}</div>
+    <div class="col-lg-2 col-md-6 mb-4"><h6>ติดตามเรา</h6>
+      <a href="${f.social?.facebook||'#'}" class="dropdown-item">Facebook</a>
+      <a href="${f.social?.youtube||'#'}" class="dropdown-item">YouTube</a>
+      <a href="${f.social?.tiktok||'#'}" class="dropdown-item">TikTok</a>
+       <a href="${f.social?.whatapp||'#'}" class="dropdown-item">Whatapp</a>    
+    </div>`;
+    document.getElementById("footer-bottom").innerHTML=`© ${new Date().getFullYear()} ${f.copyright||''}`;
+    initSubscribe();
+  });
+}
+
+function initSubscribe(){
+  const form=document.getElementById("subscribe-form"); if(!form) return;
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    const emailInput=document.getElementById("subscribe-email");
+    const email=emailInput.value.trim();
+    if(!isValidEmail(email)){ alert("รูปแบบอีเมล์ไม่ถูกต้อง ❌"); return; }
+    db.collection("subscribers").add({email:email, createdAt:firebase.firestore.FieldValue.serverTimestamp()})
+    .then(()=>{ alert("สมัครรับโปรโมชั่นเรียบร้อยแล้ว ✅"); form.reset(); })
+    .catch(err=>{ console.error(err); alert("เกิดข้อผิดพลาด ❌"); });
+  });
+}
+
+// Init
+window.onload = async()=>{
+  await loadGames();
+  await loadVouchers();
+  loadAbout();
+  loadHeader();
+  loadFooter();
+};
 </script>
 </body>
 </html>
