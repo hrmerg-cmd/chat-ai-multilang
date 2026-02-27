@@ -9,23 +9,22 @@
 body { font-family: Arial,sans-serif; background:#f4f6f9; margin:0; }
 /* ===== Header ===== */
 header {
-  background: #ffffff;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  position: sticky;
-  top: 0;
-  z-index: 999;
+.header {
+  width: 100%;
+  background: #111;
+  padding: 10px 0;
 }
 
-#headerContainer {
-  max-width: 1400px;
+.header-inner {
+  max-width: 1200px;
   margin: auto;
-  padding: 15px 20px;
+  padding: 0 20px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between; /* 🔥 ตัวสำคัญ */
 }
 
-/* ===== Logo ===== */
 .logo {
   display: flex;
   align-items: center;
@@ -37,23 +36,19 @@ header {
 }
 
 .logo span {
-  font-size: 20px;
-  font-weight: 600;
-  color: #111;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
 }
 
-/* ===== Navigation ===== */
-nav {
+.nav {
   display: flex;
   gap: 25px;
 }
 
-nav a {
+.nav a {
+  color: #fff;
   text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  position: relative;
-  transition: 0.3s;
 }
 
 /* Hover effect เส้นขีด animation */
